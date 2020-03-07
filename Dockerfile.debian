@@ -2,6 +2,9 @@ ARG BUILD_FROM=nvcr.io/nvidia/l4t-base:r32.3.1
 FROM ${BUILD_FROM}
 # hadolint ignore=DL3006
 
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=America/Los_Angeles
+
 #oznu's s6-node
 COPY qemu-aarch64-static /usr/bin/
 
