@@ -2,12 +2,14 @@ ARG BUILD_FROM=nvcr.io/nvidia/l4t-base:r32.3.1
 FROM ${BUILD_FROM}
 # hadolint ignore=DL3006
 
+#oznu's s6-node
 COPY qemu-aarch64-static /usr/bin/
+
+ENV S6_ARCH aarch64
 
 RUN set -x && apt-get update \
   && apt-get install -y curl tzdata locales psmisc procps iputils-ping logrotate libatomic1 \
   && locale-gen en_US.UTF-8 \
-  && S6_ARCH='aarch64';; \
   && curl -SLO "https://github.com/just-containers/s6-overlay/releases/download/v1.21.1.1/s6-overlay-${S6_ARCH}.tar.gz" \
   && tar -xzf s6-overlay-${S6_ARCH}.tar.gz -C / \
   && tar -xzf s6-overlay-${S6_ARCH}.tar.gz -C /usr ./bin \
@@ -21,9 +23,9 @@ RUN set -x && apt-get update \
   && sed -i "s#/var/log/messages {}.*# #g" /etc/logrotate.conf
 
 ENV NODE_VERSION 12.16.1
+ENV NOD_ARCH arm64
 
-RUN NODE_ARCH='arm64';; \
-  && set -x \
+RUN set -x \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$NODE_ARCH.tar.gz" \
   && tar -xzf "node-v$NODE_VERSION-linux-$NODE_ARCH.tar.gz" -C /usr/local --strip-components=1 --no-same-owner \
   && rm "node-v$NODE_VERSION-linux-$NODE_ARCH.tar.gz" \
@@ -42,6 +44,7 @@ RUN set -ex \
   && rm yarn-v$YARN_VERSION.tar.gz
 
 COPY rootfs /
+###
 
 RUN apt-get update \
   && apt-get install -y git python make g++ libnss-mdns avahi-discover libavahi-compat-libdnssd-dev \
@@ -53,13 +56,9 @@ RUN apt-get update \
   && npm set global-style=true \
   && npm set package-lock=false
 
-RUN case "$(uname -m)" in \
-    x86_64) FFMPEG_ARCH='x86_64';; \
-    armv7l) FFMPEG_ARCH='armv7l';; \
-    aarch64) FFMPEG_ARCH='aarch64';; \
-    *) echo "unsupported architecture"; exit 1 ;; \
-    esac \
-    && set -x \
+ENV FFMPEG_ARCH aarch64
+
+RUN set -x \
     && curl -Lfs https://github.com/oznu/ffmpeg-for-homebridge/releases/download/v0.0.1/ffmpeg-debian-${FFMPEG_ARCH}.tar.gz | tar xzf - -C / --no-same-owner
 
 ENV HOMEBRIDGE_VERSION=0.4.52
