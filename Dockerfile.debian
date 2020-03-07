@@ -23,7 +23,7 @@ RUN set -x && apt-get update \
   && sed -i "s#/var/log/messages {}.*# #g" /etc/logrotate.conf
 
 ENV NODE_VERSION 12.16.1
-ENV NOD_ARCH arm64
+ENV NODE_ARCH arm64
 
 RUN set -x \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$NODE_ARCH.tar.gz" \
