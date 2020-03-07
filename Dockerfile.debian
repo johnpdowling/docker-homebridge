@@ -80,3 +80,5 @@ RUN [ "${AVAHI:-1}" = "1" ] || (echo "Removing Avahi" && \
   rm -rf /etc/services.d/avahi \
     /etc/services.d/dbus \
     /etc/cont-init.d/40-dbus-avahi)
+
+ENTRYPOINT [ "/init" ]
