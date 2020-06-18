@@ -61,19 +61,8 @@ RUN apt-get update \
 
 ENV FFMPEG_ARCH aarch64
 
-VOLUME /usr/src
-
-RUN git clone https://github.com/jocover/jetson-ffmpeg.git \
-  && cd jetson-ffmpeg \
-  && mkdir build \
-  && cd build \
-  && cmake .. \
-  && make \
-  && make install \
-  && ldconfig
-
-RUN set -x \
-    && curl -Lfs https://github.com/oznu/ffmpeg-for-homebridge/releases/download/v0.0.1/ffmpeg-debian-${FFMPEG_ARCH}.tar.gz | tar xzf - -C / --no-same-owner
+#RUN set -x \
+#    && curl -Lfs https://github.com/oznu/ffmpeg-for-homebridge/releases/download/v0.0.1/ffmpeg-debian-${FFMPEG_ARCH}.tar.gz | tar xzf - -C / --no-same-owner
 
 ENV HOMEBRIDGE_VERSION=0.4.52
 RUN npm install -g --unsafe-perm homebridge@${HOMEBRIDGE_VERSION}
