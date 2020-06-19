@@ -46,8 +46,12 @@ RUN set -ex \
   && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
   && rm yarn-v$YARN_VERSION.tar.gz
 
+###
+##copy in other services, jetson ffmpeg libs/exec
+##see https://github.com/jocover/jetson-ffmpeg
 COPY rootfs /
-RUN ldconfig
+RUN ldconfig \
+ && chmod +x /usr/local/bin/ff*
 ###
 
 RUN apt-get update \
